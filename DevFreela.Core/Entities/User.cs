@@ -9,6 +9,7 @@ public class User : BaseEntity {
     public List<UserSkill> Skills { get; private set; }
     public List<Project> OwnedProjects { get; private set; }
     public List<Project> FreelanceProjects { get; private set; }
+    public List<ProjectComment> Comments { get; private set; }
 
     public User(string fullName, string email, DateTime birthDate) {
         this.FullName = fullName;
