@@ -1,21 +1,24 @@
 ﻿using DevFreela.API.Models;
 using DevFreela.Application.InputModels;
-using DevFreela.Application.Services.Interfaces;
+using DevFreela.Application.Queries.GetUser;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DevFreela.API.Controllers;
 
 [Route("api/users")]
 public class UsersController : ControllerBase {
-    private readonly IUserService _userService;
-    public UsersController(IUserService userService) {
-        _userService = userService;
+    private readonly IMediator _mediator;
+    public UsersController(IMediator mediator) {
+        this._mediator = mediator;
     }
 
     // api/users/1
     [HttpGet("{id}")]
-    public IActionResult GetById(int id) {
-        var user = _userService.GetUser(id);
+    public async Task<IActionResult> GetById(int id) {
+        var query = new GetUserQuery(id);
+        var user = await _mediator.Send(query);
 
         if (user == null)
             return NotFound();
@@ -25,10 +28,10 @@ public class UsersController : ControllerBase {
 
     // api/users
     [HttpPost]
-    public IActionResult Post([FromBody] CreateUserInputModel inputModel) {
-        var id = _userService.Create(inputModel);
+    public async Task<IActionResult> Post([FromBody] CreateUserInputModel command) {
+        var id = await this._mediator.Send(command);
 
-        return CreatedAtAction(nameof(GetById), new { id = id }, inputModel);
+        return CreatedAtAction(nameof(GetById), new { id = id }, command);
     }
 
     // api/users/1/login
