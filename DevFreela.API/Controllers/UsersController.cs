@@ -1,9 +1,8 @@
 ﻿using DevFreela.API.Models;
-using DevFreela.Application.InputModels;
+using DevFreela.Application.Commands.CreateUser;
 using DevFreela.Application.Queries.GetUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DevFreela.API.Controllers;
 
@@ -28,7 +27,7 @@ public class UsersController : ControllerBase {
 
     // api/users
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] CreateUserInputModel command) {
+    public async Task<IActionResult> Post([FromBody] CreateUserCommand command) {
         var id = await this._mediator.Send(command);
 
         return CreatedAtAction(nameof(GetById), new { id = id }, command);
