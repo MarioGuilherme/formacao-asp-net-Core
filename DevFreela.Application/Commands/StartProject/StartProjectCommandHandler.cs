@@ -1,31 +1,24 @@
-﻿using Dapper;
-using DevFreela.Core.Entities;
-using DevFreela.Infrastructure.Persistence;
+﻿using DevFreela.Core.Repositories;
 using MediatR;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace DevFreela.Application.Commands.StartProject;
 
 public class StartProjectCommandHandler : IRequestHandler<StartProjectCommand, Unit> {
-    private readonly DevFreelaDbContext _dbContext;
-    private readonly string _connectionString;
+    private readonly IProjectRepository _projectRepository;
 
-    public StartProjectCommandHandler(DevFreelaDbContext dbContext, IConfiguration configuration) {
-        _dbContext = dbContext;
-        _connectionString = configuration.GetConnectionString("DevFreelaCs");
+    public StartProjectCommandHandler(IProjectRepository projectRepository) {
+        this._projectRepository = projectRepository;
     }
 
+    // Versão em que é tirado a responsabilidade de negócio (start no proj) da camada repositório (Versão do Command).
+    // Mas não é estritamente errado fazer o 'project.Start()' no repository. Obs.: Não usa-se 'this._projectRepository.SaveChangesAsync()' em vez do 'this._projectRepository.StartAsync(project)' pois aqui usamos Dapper
     public async Task<Unit> Handle(StartProjectCommand request, CancellationToken cancellationToken) {
-        Project project = await this._dbContext.Projects.SingleOrDefaultAsync(p => p.Id == request.Id);
+        var project = await this._projectRepository.GetDetailsByIdAsync(request.Id);
+
         project.Start();
-        //this._dbContext.SaveChanges();
-        using (var sqlConnection = new SqlConnection(this._connectionString)) {
-            sqlConnection.Open();
-            string script = "UPDATE Projects SET Status = @status, StartedAt = @startedAt WHERE Id = @id";
-            sqlConnection.Execute(script, new { status = project.Status, startedAt = project.StartedAt, request.Id });
-        }
+
+        await this._projectRepository.StartAsync(project);
+
         return Unit.Value;
     }
 }
