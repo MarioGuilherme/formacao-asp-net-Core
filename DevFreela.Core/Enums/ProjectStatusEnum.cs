@@ -5,5 +5,6 @@ public enum ProjectStatusEnum {
     InProgress,
     Suspended,
     Cancelled,
-    Finished
+    Finished,
+    PaymentPending
 }

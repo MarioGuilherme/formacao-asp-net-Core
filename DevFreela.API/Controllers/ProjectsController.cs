@@ -90,9 +90,14 @@ public class ProjectsController : ControllerBase {
     // api/projects/1/finish
     [HttpPut("{id}/finish")]
     [Authorize(Roles = "client")]
-    public IActionResult Finish(int id) {
-        var command = new FinishProjectCommand(id);
-        this._mediator.Send(command);
-        return NoContent();
+    public async Task<IActionResult> Finish(int id, [FromBody] FinishProjectCommand command){
+        command.Id = id;
+
+        bool result = await _mediator.Send(command);
+
+        if (!result)
+            return BadRequest("O pagamento não pôde ser processado.");
+
+        return Accepted();
     }
 }
