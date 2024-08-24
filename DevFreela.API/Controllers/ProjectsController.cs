@@ -15,19 +15,15 @@ namespace DevFreela.API.Controllers;
 
 [Route("api/projects")]
 [Authorize]
-public class ProjectsController : ControllerBase {
-    private readonly IMediator _mediator;
-
-    public ProjectsController(IMediator mediator) {
-        this._mediator = mediator;
-    }
+public class ProjectsController(IMediator mediator) : ControllerBase {
+    private readonly IMediator _mediator = mediator;
 
     // api/projects?query=net core
     [HttpGet]
     [Authorize(Roles = "client, freelancer")]
     public async Task<IActionResult> Get(string query) {
-        var getAllProjectsQuery = new GetAllProjectsQuery(query);
-        var projects = await this._mediator.Send(getAllProjectsQuery);
+        GetAllProjectsQuery getAllProjectsQuery = new(query);
+        List<ProjectViewModel> projects = await this._mediator.Send(getAllProjectsQuery);
         return Ok(projects);
     }
 
@@ -35,10 +31,10 @@ public class ProjectsController : ControllerBase {
     [HttpGet("{id}")]
     [Authorize(Roles = "client, freelancer")]
     public async Task<IActionResult> GetById(int id) {
-        var query = new GetProjectByIdQuery(id);
+        GetProjectByIdQuery query = new(id);
         ProjectDetailsViewModel projectDetailsViewModel = await this._mediator.Send(query);
 
-        if (projectDetailsViewModel == null)
+        if (projectDetailsViewModel is null)
             return NotFound();
 
         return Ok(projectDetailsViewModel);
@@ -65,7 +61,7 @@ public class ProjectsController : ControllerBase {
     [HttpDelete("{id}")]
     [Authorize(Roles = "client")]
     public async Task<IActionResult> Delete(int id) {
-        var command = new DeleteProjectCommand(id);
+        DeleteProjectCommand command = new(id);
         await this._mediator.Send(command);
         return NoContent();
     }
@@ -82,7 +78,7 @@ public class ProjectsController : ControllerBase {
     [HttpPut("{id}/start")]
     [Authorize(Roles = "client")]
     public IActionResult Start(int id) {
-        var command = new StartProjectCommand(id);
+        StartProjectCommand command = new(id);
         this._mediator.Send(command);
         return NoContent();
     }
@@ -93,11 +89,11 @@ public class ProjectsController : ControllerBase {
     public async Task<IActionResult> Finish(int id, [FromBody] FinishProjectCommand command){
         command.Id = id;
 
-        bool result = await _mediator.Send(command);
+        bool result = await this._mediator.Send(command);
 
         if (!result)
-            return BadRequest("O pagamento não pôde ser processado.");
+            return this.BadRequest("O pagamento não pôde ser processado.");
 
-        return Accepted();
+        return this.Accepted();
     }
 }

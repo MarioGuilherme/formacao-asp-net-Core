@@ -34,7 +34,7 @@ public class Project : BaseEntity {
     }
 
     public void Finish() {
-        if (this.Status == ProjectStatusEnum.InProgress) {
+        if (this.Status == ProjectStatusEnum.PaymentPending) {
             this.Status = ProjectStatusEnum.Finished;
             this.FinishedAt = DateTime.Now;
         }
