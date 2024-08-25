@@ -34,8 +34,7 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
         GetProjectByIdQuery query = new(id);
         ProjectDetailsViewModel projectDetailsViewModel = await this._mediator.Send(query);
 
-        if (projectDetailsViewModel is null)
-            return NotFound();
+        if (projectDetailsViewModel is null) return NotFound();
 
         return Ok(projectDetailsViewModel);
     }
@@ -45,7 +44,6 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     [Authorize(Roles = "client")]
     public async Task<IActionResult> Post([FromBody] CreateProjectCommand command) {
         int id = await this._mediator.Send(command);
-
         return CreatedAtAction(nameof(GetById), new { id }, command);
     }
 
@@ -91,8 +89,7 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
 
         bool result = await this._mediator.Send(command);
 
-        if (!result)
-            return this.BadRequest("O pagamento não pôde ser processado.");
+        if (!result) return this.BadRequest("O pagamento não pôde ser processado.");
 
         return this.Accepted();
     }

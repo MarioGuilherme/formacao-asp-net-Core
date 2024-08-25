@@ -2,11 +2,6 @@
 
 namespace DevFreela.Application.Commands.DeleteProject;
 
-public class DeleteProjectCommand : IRequest<Unit> {
-    public int Id { get; private set; }
-
-    public DeleteProjectCommand(int id)
-    {
-        this.Id = id;
-    }
+public class DeleteProjectCommand(int id) : IRequest<Unit> {
+    public int Id { get; private set; } = id;
 }

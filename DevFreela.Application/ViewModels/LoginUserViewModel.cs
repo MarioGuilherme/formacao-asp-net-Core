@@ -1,11 +1,6 @@
 ﻿namespace DevFreela.Application.ViewModels;
 
-public class LoginUserViewModel {
-    public string Email { get; private set; }
-    public string Token { get; private set; }
-
-    public LoginUserViewModel(string email, string token) {
-        this.Email = email;
-        this.Token = token;
-    }
+public class LoginUserViewModel(string email, string token) {
+    public string Email { get; private set; } = email;
+    public string Token { get; private set; } = token;
 }

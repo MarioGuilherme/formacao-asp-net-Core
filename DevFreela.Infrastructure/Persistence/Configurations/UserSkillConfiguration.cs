@@ -5,7 +5,5 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace DevFreela.Infrastructure.Persistence.Configurations;
 
 public class UserSkillConfiguration : IEntityTypeConfiguration<UserSkill> {
-    public void Configure(EntityTypeBuilder<UserSkill> builder) {
-        builder.HasKey(us => us.Id);
-    }
+    public void Configure(EntityTypeBuilder<UserSkill> builder) => builder.HasKey(us => us.Id);
 }

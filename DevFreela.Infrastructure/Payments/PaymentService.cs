@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 
 namespace DevFreela.Infrastructure.Payments;
+
 public class PaymentService(IMessageBusService messageBusService) : IPaymentService {
     private readonly IMessageBusService _messageBusService = messageBusService;
     private const string QUEUE_NAME = "Payments";
@@ -11,8 +12,8 @@ public class PaymentService(IMessageBusService messageBusService) : IPaymentServ
     public void ProcessPayment(PaymentInfoDTO paymentInfoDTO) {
         string paymentInfoJson = JsonSerializer.Serialize(paymentInfoDTO);
 
-        byte[] bytes = Encoding.UTF8.GetBytes(paymentInfoJson);
+        byte[] paymentInfoBytes = Encoding.UTF8.GetBytes(paymentInfoJson);
 
-        this._messageBusService.Publish(QUEUE_NAME, bytes);
+        this._messageBusService.Publish(QUEUE_NAME, paymentInfoBytes);
     }
 }

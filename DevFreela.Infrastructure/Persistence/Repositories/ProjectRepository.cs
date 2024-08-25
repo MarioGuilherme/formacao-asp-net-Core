@@ -8,18 +8,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace DevFreela.Infrastructure.Persistence.Repositories;
 
-public class ProjectRepository : IProjectRepository {
-    private readonly DevFreelaDbContext _dbContext;
-    private readonly string _connectionString;
+public class ProjectRepository(DevFreelaDbContext dbContext, IConfiguration configuration) : IProjectRepository {
+    private readonly DevFreelaDbContext _dbContext = dbContext;
+    private readonly string _connectionString = configuration.GetConnectionString("DevFreelaCS");
 
-    public ProjectRepository(DevFreelaDbContext dbContext, IConfiguration configuration) {
-        this._dbContext = dbContext;
-        this._connectionString = configuration.GetConnectionString("DevFreelaCS");
-    }
-
-    public async Task<List<Project>> GetAllAsync() {
-        return await this._dbContext.Projects.ToListAsync();
-    }
+    public async Task<List<Project>> GetAllAsync() => await this._dbContext.Projects.ToListAsync();
 
     public async Task<Project> GetDetailsByIdAsync(int id) {
         return await this._dbContext.Projects
@@ -36,16 +29,13 @@ public class ProjectRepository : IProjectRepository {
     // Versão em que tira a responsabilidade de negócio (start no proj) da camada repositório (Versão do Repository)
     // Idem: Mas não é estritamente errado fazer o 'project.Start()' no repository.
     public async Task StartAsync(Project project) {
-        using (var sqlConnection = new SqlConnection(this._connectionString)) {
-            sqlConnection.Open();
-            string script = "UPDATE Projects SET Status = @status, StartedAt = @startedAt WHERE Id = @id";
-            await sqlConnection.ExecuteAsync(script, new { status = project.Status, startedAt = project.StartedAt, project.Id });
-        }
+        using var sqlConnection = new SqlConnection(this._connectionString);
+        sqlConnection.Open();
+        string script = "UPDATE Projects SET Status = @status, StartedAt = @startedAt WHERE Id = @id";
+        await sqlConnection.ExecuteAsync(script, new { status = project.Status, startedAt = project.StartedAt, project.Id });
     }
 
-    public async Task SaveChangesAsync() {
-        await this._dbContext.SaveChangesAsync();
-    }
+    public async Task SaveChangesAsync() => await this._dbContext.SaveChangesAsync();
 
     public async Task AddCommentAsync(ProjectComment projectComment) {
         await this._dbContext.ProjectComments.AddAsync(projectComment);

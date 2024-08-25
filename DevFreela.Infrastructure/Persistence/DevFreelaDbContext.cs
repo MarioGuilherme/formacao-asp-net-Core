@@ -11,7 +11,5 @@ public class DevFreelaDbContext(DbContextOptions<DevFreelaDbContext> options) : 
     public DbSet<UserSkill> UserSkills { get; set; }
     public DbSet<ProjectComment> ProjectComments { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 }

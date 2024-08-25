@@ -1,19 +1,10 @@
 ﻿namespace DevFreela.Core.DTOs;
 
-public class PaymentInfoDTO {
-    public int IdProject { get; private set; }
-    public string CreditCardNumber { get; private set; }
-    public string Cvv { get; private set; }
-    public string ExpiresAt { get; private set; }
-    public string FullName { get; private set; }
-    public decimal Amount { get; private set; }
-
-    public PaymentInfoDTO(int idProject, string creditCardNumber, string cvv, string expiresAt, string fullName, decimal amount) {
-        IdProject = idProject;
-        CreditCardNumber = creditCardNumber;
-        Cvv = cvv;
-        ExpiresAt = expiresAt;
-        FullName = fullName;
-        Amount = amount;
-    }
+public class PaymentInfoDTO(int idProject, string creditCardNumber, string cvv, string expiresAt, string fullName, decimal amount) {
+    public int IdProject { get; private set; } = idProject;
+    public string CreditCardNumber { get; private set; } = creditCardNumber;
+    public string Cvv { get; private set; } = cvv;
+    public string ExpiresAt { get; private set; } = expiresAt;
+    public string FullName { get; private set; } = fullName;
+    public decimal Amount { get; private set; } = amount;
 }

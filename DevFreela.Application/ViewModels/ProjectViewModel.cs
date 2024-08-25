@@ -1,13 +1,7 @@
 ﻿namespace DevFreela.Application.ViewModels;
 
-public class ProjectViewModel {
-    public int Id { get; private set; }
-    public string Title { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-
-    public ProjectViewModel(int id, string title, DateTime createdAt) {
-        this.Id = id;
-        this.Title = title;
-        this.CreatedAt = createdAt;
-    }
+public class ProjectViewModel(int id, string title, DateTime createdAt) {
+    public int Id { get; private set; } = id;
+    public string Title { get; private set; } = title;
+    public DateTime CreatedAt { get; private set; } = createdAt;
 }

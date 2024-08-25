@@ -4,14 +4,14 @@ using System.Text.RegularExpressions;
 
 namespace DevFreela.Application.Validators;
 
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand> {
+public partial class CreateUserCommandValidator : AbstractValidator<CreateUserCommand> {
     public CreateUserCommandValidator() {
         this.RuleFor(u => u.Email)
             .EmailAddress()
             .WithMessage("E-mail inválido.");
 
         this.RuleFor(u => u.Password)
-            .Must(this.ValidPassword)
+            .Must(ValidPassword)
             .WithMessage("A senha deve conter pelo menos 8 caracteres, um número, uma letra maiúscula, uma minúscula e um caractere especial.");
 
         this.RuleFor(u => u.FullName)
@@ -20,8 +20,11 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand> {
             .WithMessage("Nome é obrigatório.");
     }
 
-    public bool ValidPassword(string password) {
-        var regex = new Regex(@"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=].*$)");
+    public static bool ValidPassword(string password) {
+        Regex regex = RegexEmail();
         return regex.IsMatch(password);
     }
+
+    [GeneratedRegex(@"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=].*$)")]
+    private static partial Regex RegexEmail();
 }

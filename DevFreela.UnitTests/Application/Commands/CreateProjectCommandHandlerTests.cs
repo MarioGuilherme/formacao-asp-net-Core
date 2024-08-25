@@ -9,9 +9,9 @@ public class CreateProjectCommandHandlerTests {
     [Fact]
     public async Task InputDataIsOk_Executed_ReturnProjectId() {
         // Arrange
-        var projectRepositoryMock = new Mock<IProjectRepository>();
+        Mock<IProjectRepository> projectRepositoryMock = new();
 
-        var createProjectCommand = new CreateProjectCommand() {
+        CreateProjectCommand createProjectCommand = new() {
             Title = "Título de Teste",
             Description = "Uma descrição top de linha",
             TotalCost = 30_000,
@@ -19,10 +19,10 @@ public class CreateProjectCommandHandlerTests {
             IdFreelancer = 2
         };
 
-        var createProjectCommandHandler = new CreateProjectCommandHandler(projectRepositoryMock.Object);
+        CreateProjectCommandHandler createProjectCommandHandler = new(projectRepositoryMock.Object);
 
         // Act
-        var id = await createProjectCommandHandler.Handle(createProjectCommand, new());
+        int id = await createProjectCommandHandler.Handle(createProjectCommand, new());
 
         // Assert
         Assert.True(id >= 0);

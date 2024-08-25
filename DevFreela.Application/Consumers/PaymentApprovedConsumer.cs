@@ -4,7 +4,6 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
 using System.Text;
-using DevFreela.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DevFreela.Core.Repositories;
 using DevFreela.Core.Entities;
@@ -20,7 +19,7 @@ public class PaymentApprovedConsumer : BackgroundService {
     // Quando executar a aplicação, a fila será criada
     public PaymentApprovedConsumer(IServiceProvider serviceProvider) {
         this._serviceProvider = serviceProvider;
-        ConnectionFactory factory = new() { HostName = "localhost" };
+        ConnectionFactory factory = new() { HostName = "localhost", Port = 5672 };
         this._connection = factory.CreateConnection();
         this._channel = this._connection.CreateModel();
         this._channel.QueueDeclare(queue: PAYMENTS_APROVED_QUEUE, durable: false, exclusive: false, autoDelete: false, arguments: null);

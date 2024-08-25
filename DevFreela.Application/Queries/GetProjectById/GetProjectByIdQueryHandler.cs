@@ -5,17 +5,13 @@ using MediatR;
 
 namespace DevFreela.Application.Queries.GetProjectById;
 
-public class GetProjectByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, ProjectDetailsViewModel> {
-    private readonly IProjectRepository _projectRepository;
-
-    public GetProjectByIdQueryHandler(IProjectRepository projectRepository) {
-        _projectRepository = projectRepository;
-    }
+public class GetProjectByIdQueryHandler(IProjectRepository projectRepository) : IRequestHandler<GetProjectByIdQuery, ProjectDetailsViewModel> {
+    private readonly IProjectRepository _projectRepository = projectRepository;
 
     public async Task<ProjectDetailsViewModel> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken) {
         Project project = await this._projectRepository.GetDetailsByIdAsync(request.Id);
 
-        if (project == null) return null;
+        if (project is null) return null;
 
         ProjectDetailsViewModel projectDetailsViewModel = new(
             project.Id,

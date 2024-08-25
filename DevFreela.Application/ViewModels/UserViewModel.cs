@@ -1,11 +1,6 @@
 ﻿namespace DevFreela.Application.ViewModels;
 
-public class UserViewModel {
-    public string FullName { get; private set; }
-    public string Email { get; private set; }
-
-    public UserViewModel(string fullName, string email) {
-        FullName = fullName;
-        Email = email;
-    }
+public class UserViewModel(string fullName, string email) {
+    public string FullName { get; private set; } = fullName;
+    public string Email { get; private set; } = email;
 }
