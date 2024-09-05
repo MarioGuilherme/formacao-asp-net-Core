@@ -7,6 +7,7 @@ using DevFreela.Application.Commands.UpdateProject;
 using DevFreela.Application.Queries.GetAllProjects;
 using DevFreela.Application.Queries.GetProjectById;
 using DevFreela.Application.ViewModels;
+using DevFreela.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,8 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     // api/projects?query=net core
     [HttpGet]
     [Authorize(Roles = "client, freelancer")]
-    public async Task<IActionResult> Get(string query) {
-        GetAllProjectsQuery getAllProjectsQuery = new(query);
-        List<ProjectViewModel> projects = await this._mediator.Send(getAllProjectsQuery);
+    public async Task<IActionResult> Get(GetAllProjectsQuery getAllProjectsQuery) {
+        PaginationResult<ProjectViewModel> projects = await this._mediator.Send(getAllProjectsQuery);
         return Ok(projects);
     }
 
