@@ -3,7 +3,7 @@
 namespace DevFreela.Core.Repositories;
 
 public interface IProjectRepository {
-    Task<List<Project>> GetAllAsync();
+    Task<List<Project>> GetAllAsync(string query);
     Task<Project> GetDetailsByIdAsync(int id);
     Task AddAsync(Project project);
     Task StartAsync(Project project);

@@ -12,7 +12,14 @@ public class ProjectRepository(DevFreelaDbContext dbContext, IConfiguration conf
     private readonly DevFreelaDbContext _dbContext = dbContext;
     private readonly string _connectionString = configuration.GetConnectionString("DevFreelaCS");
 
-    public async Task<List<Project>> GetAllAsync() => await this._dbContext.Projects.ToListAsync();
+    public async Task<List<Project>> GetAllAsync(string query) {
+        IQueryable<Project> projects = this._dbContext.Projects;
+
+        if (!string.IsNullOrEmpty(query))
+            projects = projects.Where(p => p.Title.Contains(query) || p.Description.Contains(query));
+
+        return await projects.ToListAsync();
+    }
 
     public async Task<Project> GetDetailsByIdAsync(int id) {
         return await this._dbContext.Projects

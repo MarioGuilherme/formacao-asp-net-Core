@@ -9,7 +9,7 @@ public class GetAllProjectsQueryHandler(IProjectRepository projectRepository) : 
     private readonly IProjectRepository _projectRepository = projectRepository;
 
     public async Task<List<ProjectViewModel>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken) {
-        List<Project> projects = await this._projectRepository.GetAllAsync();
+        List<Project> projects = await this._projectRepository.GetAllAsync(request.Query);
         List<ProjectViewModel> projectViewModels = projects
             .Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt))
             .ToList();
