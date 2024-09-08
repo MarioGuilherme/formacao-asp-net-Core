@@ -30,9 +30,12 @@ public class ProjectRepository(DevFreelaDbContext dbContext, IConfiguration conf
             .SingleOrDefaultAsync(p => p.Id == id);
     }
 
+    public Task<Project> GetByIdAsync(int id) => this._dbContext.Projects
+        .AsNoTracking()
+        .SingleOrDefaultAsync(p => p.Id == id);
+
     public async Task AddAsync(Project project) {
         await this._dbContext.Projects.AddAsync(project);
-        await this._dbContext.SaveChangesAsync();
     }
 
     // Versão em que tira a responsabilidade de negócio (start no proj) da camada repositório (Versão do Repository)
@@ -48,6 +51,11 @@ public class ProjectRepository(DevFreelaDbContext dbContext, IConfiguration conf
 
     public async Task AddCommentAsync(ProjectComment projectComment) {
         await this._dbContext.ProjectComments.AddAsync(projectComment);
+    }
+
+    public async Task UpdateAsync(Project project) {
+        // this._dbContext.Entry(project).State = EntityState.Modified; // Equivalente à linha de baixo (porém não marca as subentidades do obj)
+        this._dbContext.Projects.Update(project);
         await this._dbContext.SaveChangesAsync();
     }
 }

@@ -1,34 +1,15 @@
-using DevFreela.Application.Commands.CreateProject;
-using DevFreela.Application.Validators;
-using DevFreela.Infrastructure.Persistence;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using DevFreela.API.Filters;
+using DevFreela.Application;
+using DevFreela.Infrastructure;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using DevFreela.Application.Consumers;
-using DevFreela.API.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevFreelaCS")));
-// builder.Services.AddDbContext<DevFreelaDbContext>(options => options.UseInMemoryDatabase("DevFreelaCS")); // Banco e memória
+builder.Services
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication();
 
-builder.Services.AddHostedService<PaymentApprovedConsumer>();
-
-builder.Services.AddHttpClient();
-
-builder.Services.AddInfrastructure();
-
-builder.Services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter)));
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>(); // Já carrega todos os validadores
-
-builder.Services.AddMediatR(opt => opt.RegisterServicesFromAssemblyContaining(typeof(CreateProjectCommand))); // Já configura todos os Commands e Queries
-
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new() { Title = "DevFreela.API", Version = "v1" });
 
@@ -43,7 +24,7 @@ builder.Services.AddSwaggerGen(c => {
 
     c.AddSecurityRequirement(new() {
         {
-            new OpenApiSecurityScheme {
+            new() {
                 Reference = new() {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
@@ -53,23 +34,6 @@ builder.Services.AddSwaggerGen(c => {
         }
     });
 });
-
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
-        options.TokenValidationParameters = new() {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
-
-builder.Services.AddEndpointsApiExplorer();
 
 WebApplication app = builder.Build();
 

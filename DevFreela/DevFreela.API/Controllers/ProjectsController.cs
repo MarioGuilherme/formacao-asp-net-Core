@@ -24,7 +24,7 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     [Authorize(Roles = "client, freelancer")]
     public async Task<IActionResult> Get(GetAllProjectsQuery getAllProjectsQuery) {
         PaginationResult<ProjectViewModel> projects = await this._mediator.Send(getAllProjectsQuery);
-        return Ok(projects);
+        return this.Ok(projects);
     }
 
     // api/projects/3
@@ -34,9 +34,9 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
         GetProjectByIdQuery query = new(id);
         ProjectDetailsViewModel projectDetailsViewModel = await this._mediator.Send(query);
 
-        if (projectDetailsViewModel is null) return NotFound();
+        if (projectDetailsViewModel is null) return this.NotFound();
 
-        return Ok(projectDetailsViewModel);
+        return this.Ok(projectDetailsViewModel);
     }
 
     // api/projects/
@@ -44,7 +44,7 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     [Authorize(Roles = "client")]
     public async Task<IActionResult> Post([FromBody] CreateProjectCommand command) {
         int id = await this._mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id }, command);
+        return this.CreatedAtAction(nameof(this.GetById), new { id }, command);
     }
 
     // api/projects/3
@@ -52,7 +52,7 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     [Authorize(Roles = "client")]
     public async Task<IActionResult> Put(int id, [FromBody] UpdateProjectCommand command) {
         await this._mediator.Send(command);
-        return NoContent();
+        return this.NoContent();
     }
 
     // api/projects/3
@@ -61,7 +61,7 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     public async Task<IActionResult> Delete(int id) {
         DeleteProjectCommand command = new(id);
         await this._mediator.Send(command);
-        return NoContent();
+        return this.NoContent();
     }
 
     // api/projects/1/comments
@@ -69,16 +69,16 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
     [Authorize(Roles = "client, freelancer")]
     public async Task<IActionResult> PostComment(int id, [FromBody] CreateCommentCommand command) {
         await this._mediator.Send(command);
-        return NoContent();
+        return this.NoContent();
     }
 
     // api/projects/1/start
     [HttpPut("{id}/start")]
     [Authorize(Roles = "client")]
-    public IActionResult Start(int id) {
+    public async Task<IActionResult> Start(int id) {
         StartProjectCommand command = new(id);
-        this._mediator.Send(command);
-        return NoContent();
+        await this._mediator.Send(command);
+        return this.NoContent();
     }
 
     // api/projects/1/finish

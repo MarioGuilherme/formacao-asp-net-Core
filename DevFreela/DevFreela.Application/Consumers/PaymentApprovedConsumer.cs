@@ -1,5 +1,4 @@
-﻿using DevFreela.Core.IntegrationEvents;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text.Json;
@@ -7,6 +6,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using DevFreela.Core.Repositories;
 using DevFreela.Core.Entities;
+using DevFreela.Application.IntegrationEvents;
 
 namespace DevFreela.Application.Consumers;
 

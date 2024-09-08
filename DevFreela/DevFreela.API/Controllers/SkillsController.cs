@@ -1,5 +1,5 @@
 ﻿using DevFreela.Application.Queries.GetAllSkills;
-using DevFreela.Core.DTOs;
+using DevFreela.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,7 @@ public class SkillsController(IMediator mediator) : ControllerBase {
     [HttpGet]
     public async Task<IActionResult> Get() {
         GetAllSkillsQuery query = new();
-        List<SkillDTO> skills = await _mediator.Send(query);
-        return Ok(skills);
+        List<SkillViewModel> skills = await this._mediator.Send(query);
+        return this.Ok(skills);
     }
 }

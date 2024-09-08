@@ -19,9 +19,9 @@ public class UsersController(IMediator mediator) : ControllerBase {
         GetUserQuery query = new(id);
         UserViewModel user = await this._mediator.Send(query);
 
-        if (user is null) return NotFound();
+        if (user is null) return this.NotFound();
 
-        return Ok(user);
+        return this.Ok(user);
     }
 
     // api/users
@@ -29,7 +29,7 @@ public class UsersController(IMediator mediator) : ControllerBase {
     [AllowAnonymous]
     public async Task<IActionResult> Post([FromBody] CreateUserCommand command) {
         int id = await this._mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id }, command);
+        return this.CreatedAtAction(nameof(this.GetById), new { id }, command);
     }
 
     // api/users/1/login
@@ -38,8 +38,8 @@ public class UsersController(IMediator mediator) : ControllerBase {
     public async Task<IActionResult> Login([FromBody] LoginUserCommand command) {
         LoginUserViewModel loginUserViewModel = await this._mediator.Send(command);
 
-        if (loginUserViewModel is null) return BadRequest();
+        if (loginUserViewModel is null) return this.BadRequest();
 
-        return Ok(loginUserViewModel);
+        return this.Ok(loginUserViewModel);
     }
 }

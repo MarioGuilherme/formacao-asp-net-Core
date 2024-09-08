@@ -1,6 +1,7 @@
 ﻿using DevFreela.Application.Commands.CreateProject;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
+using DevFreela.Infrastructure.Persistence;
 using Moq;
 
 namespace DevFreela.UnitTests.Application.Commands;
@@ -9,7 +10,12 @@ public class CreateProjectCommandHandlerTests {
     [Fact]
     public async Task InputDataIsOk_Executed_ReturnProjectId() {
         // Arrange
+        Mock<IUnitOfWork> unitOfWork = new();
         Mock<IProjectRepository> projectRepositoryMock = new();
+        Mock<ISkillRepository> skillRepositoryMock = new();
+
+        unitOfWork.SetupGet(uow => uow.Projects).Returns(projectRepositoryMock.Object);
+        unitOfWork.SetupGet(uow => uow.Skills).Returns(skillRepositoryMock.Object);
 
         CreateProjectCommand createProjectCommand = new() {
             Title = "Título de Teste",
@@ -19,7 +25,7 @@ public class CreateProjectCommandHandlerTests {
             IdFreelancer = 2
         };
 
-        CreateProjectCommandHandler createProjectCommandHandler = new(projectRepositoryMock.Object);
+        CreateProjectCommandHandler createProjectCommandHandler = new(unitOfWork.Object);
 
         // Act
         int id = await createProjectCommandHandler.Handle(createProjectCommand, new());
