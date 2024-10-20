@@ -1,18 +1,18 @@
-using System.Text;
+using DevFreela.Core.Auth;
+using DevFreela.Core.MessageBus;
+using DevFreela.Core.Payment;
 using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Auth;
 using DevFreela.Infrastructure.MessageBus;
+using DevFreela.Infrastructure.Payment;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
-using DevFreela.Infrastructure.Payment;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using DevFreela.Core.Auth;
-using DevFreela.Core.MessageBus;
-using DevFreela.Core.Payment;
+using System.Text;
 
 namespace DevFreela.Infrastructure;
 

@@ -1,4 +1,4 @@
-﻿using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Persistence;
 using DevFreela.Core.Repositories;
 using Microsoft.EntityFrameworkCore.Storage;
 

@@ -1,6 +1,6 @@
 ﻿using DevFreela.Core.Repositories;
 
-namespace DevFreela.Infrastructure.Persistence;
+namespace DevFreela.Core.Persistence;
 
 public interface IUnitOfWork : IDisposable {
     IProjectRepository Projects { get; }
