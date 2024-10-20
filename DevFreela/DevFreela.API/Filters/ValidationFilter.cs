@@ -10,8 +10,7 @@ public class ValidationFilter : IActionFilter {
         if (!context.ModelState.IsValid) {
             IEnumerable<string> messages = context.ModelState
                    .SelectMany(ms => ms.Value.Errors)
-                   .Select(e => e.ErrorMessage)
-                   .ToList();
+                   .Select(e => e.ErrorMessage);
 
             context.Result = new BadRequestObjectResult(messages);
         }

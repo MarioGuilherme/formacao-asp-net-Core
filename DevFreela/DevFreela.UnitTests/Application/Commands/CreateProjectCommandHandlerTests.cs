@@ -2,6 +2,7 @@
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
+using MediatR;
 using Moq;
 
 namespace DevFreela.UnitTests.Application.Commands;
@@ -11,6 +12,7 @@ public class CreateProjectCommandHandlerTests {
     public async Task InputDataIsOk_Executed_ReturnProjectId() {
         // Arrange
         Mock<IUnitOfWork> unitOfWork = new();
+        Mock<IMediator> mediator = new();
         Mock<IProjectRepository> projectRepositoryMock = new();
         Mock<ISkillRepository> skillRepositoryMock = new();
 
@@ -25,7 +27,7 @@ public class CreateProjectCommandHandlerTests {
             IdFreelancer = 2
         };
 
-        CreateProjectCommandHandler createProjectCommandHandler = new(unitOfWork.Object);
+        CreateProjectCommandHandler createProjectCommandHandler = new(unitOfWork.Object, mediator.Object);
 
         // Act
         int id = await createProjectCommandHandler.Handle(createProjectCommand, new());

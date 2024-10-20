@@ -10,6 +10,7 @@ namespace DevFreela.API.Controllers;
 
 [Route("api/users")]
 [Authorize]
+[ApiController]
 public class UsersController(IMediator mediator) : ControllerBase {
     private readonly IMediator _mediator = mediator;
 

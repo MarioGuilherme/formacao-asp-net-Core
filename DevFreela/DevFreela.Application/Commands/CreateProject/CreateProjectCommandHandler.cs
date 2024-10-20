@@ -1,11 +1,13 @@
-﻿using DevFreela.Core.Entities;
+﻿using DevFreela.Application.Notification.ProjectCreated;
+using DevFreela.Core.Entities;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 
 namespace DevFreela.Application.Commands.CreateProject;
 
-public class CreateProjectCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateProjectCommand, int> {
+public class CreateProjectCommandHandler(IUnitOfWork unitOfWork, IMediator mediator) : IRequestHandler<CreateProjectCommand, int> {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IMediator _mediator;
 
     public async Task<int> Handle(CreateProjectCommand request, CancellationToken cancellationToken) {
         Project project = new(request.Title, request.Description, request.IdClient, request.IdFreelancer, request.TotalCost);
@@ -20,6 +22,9 @@ public class CreateProjectCommandHandler(IUnitOfWork unitOfWork) : IRequestHandl
         await this._unitOfWork.CompleteAsync();
 
         await this._unitOfWork.CommitAsync();
+
+        ProjectCreatedNotification projectCreated = new(project.Id, project.Title, project.TotalCost);
+        await this._mediator.Publish(projectCreated, cancellationToken);
 
         return project.Id;
     }

@@ -1,4 +1,5 @@
 ﻿using DevFreela.Application.ViewModels;
+using DevFreela.Core.Auth;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Auth;
@@ -6,11 +7,11 @@ using MediatR;
 
 namespace DevFreela.Application.Commands.LoginUser;
 
-public class LoginUserCommandHandler(IAuthService authService, IUserRepository userRepository) : IRequestHandler<LoginUserCommand, LoginUserViewModel> {
+public class LoginUserCommandHandler(IAuthService authService, IUserRepository userRepository) : IRequestHandler<LoginUserCommand, LoginUserViewModel?> {
     private readonly IAuthService _authService = authService;
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<LoginUserViewModel> Handle(LoginUserCommand request, CancellationToken cancellationToken) {
+    public async Task<LoginUserViewModel?> Handle(LoginUserCommand request, CancellationToken cancellationToken) {
         // Utilizar o mesmo algoritmo para criar o hash dessa senha
         string passwordHash = this._authService.ComputeSha256Hash(request.Password);
 

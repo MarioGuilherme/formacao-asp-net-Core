@@ -16,6 +16,7 @@ namespace DevFreela.API.Controllers;
 
 [Route("api/projects")]
 [Authorize]
+[ApiController]
 public class ProjectsController(IMediator mediator) : ControllerBase {
     private readonly IMediator _mediator = mediator;
 
@@ -71,6 +72,19 @@ public class ProjectsController(IMediator mediator) : ControllerBase {
         await this._mediator.Send(command);
         return this.NoContent();
     }
+
+    // Servindo como repertório
+    // POST api/projects/1234/comments
+    //[HttpPost("{id}/comments")]
+    //public async Task<IActionResult> PostComment(int id, InsertCommentCommand command) {
+    //    var result = await _mediator.Send(command);
+
+    //    if (!result.IsSuccess) {
+    //        return BadRequest(result.Message);
+    //    }
+
+    //    return NoContent();
+    //}
 
     // api/projects/1/start
     [HttpPut("{id}/start")]
